@@ -1,10 +1,26 @@
 import Albums from "./Albums";
 
-export default async function Posts(){
+const getPosts = async () => {
     console.log('Getting Posts');
     const response = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=3');
     const posts = await response.json();
     console.log('Done Getting Posts');
+    return posts;
+}
+
+const getAlbums = async () => {
+    console.log('Getting Albums');
+    const response = await fetch('https://jsonplaceholder.typicode.com/albums?_limit=3');
+    const albums = await response.json();
+    console.log('Done Getting Albums');
+    return albums;
+}
+
+export default async function Posts(){
+    const postsPromise =  getPosts();
+    const albumsPromise = getAlbums();
+
+    const [posts, albums] = await Promise.all([postsPromise, albumsPromise]);
 
     return (
         <div className="bg-gray-800 text-white p-5 min-h-screen">
@@ -16,7 +32,7 @@ export default async function Posts(){
                 </li>
                 ))}
             </ul>
-            <Albums />
+            <Albums albums={albums}/>
     </div>
     )
 }
